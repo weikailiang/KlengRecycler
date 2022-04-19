@@ -1,0 +1,45 @@
+apply plugin: 'maven'
+
+
+task androidJavadocs(type: Javadoc) {
+    options.encoding = "utf-8"
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives androidSourcesJar
+    //如果项目javadoc不全会报错，可以注释掉
+    archives androidJavadocsJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            //仓库地址
+            repository(url: 'http://172.31.5.75:8081/nexus/repository/maven-public/') {
+                //私服账户信息
+                authentication(userName: 'admin', password: 'wkl309565888')
+            }
+            //pom必需的参数
+            pom.project {
+                name 'hiadapter'
+                version '1.0.1'
+                artifactId 'kleng-hiadapter'
+                groupId 'com.wkl.hiadapter'
+                description 'first commit'
+                packaging 'aar'
+            }
+        }
+    }
+}

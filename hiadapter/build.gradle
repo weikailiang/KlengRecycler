@@ -38,26 +38,4 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
 }
 
-def website = 'https://github.com/weikailiang/KlengRecycler'      // 项目的主页
-def gitUrl = 'https://github.com/weikailiang/KlengRecycler.git'   // Git仓库的url
-Properties properties = new Properties()
-properties.load(file('../local.properties').newDataInputStream())
-
-def user = properties.getProperty("bintray.user")
-def key = properties.getProperty("bintray.apikey")
-
-apply plugin: 'com.novoda.bintray-release'
-publish {
-    userOrg = user
-    repoName = 'KlengRecycler'
-    groupId = 'com.wkl.hiadapter'
-    artifactId = 'KlengRecycler-plugin'
-    publishVersion = '1.0.2'
-    bintrayUser = user//用户名
-    bintrayKey = key//bintray秘钥
-    desc = 'Oh hi, this is a nice description for a project, right?'
-    website = website
-    dryRun =false
-    repository = gitUrl
-    autoPublish=true
-}
+apply from: '../nexus_upload.gradle'
